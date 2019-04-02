@@ -1,6 +1,13 @@
 # lepo-build
 
-A build image for [lepo](https://github.com/Lepovirta/lepo) static website.
+A build image containing tools for [lepo](https://github.com/Lepovirta/lepo) static website.
+Includes the following:
+
+* AWS CLI
+* Git
+* Hugo
+
+The image is hosted on [Docker Hub](https://hub.docker.com/r/lepovirta/lepo-build).
 
 ## License
 
