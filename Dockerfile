@@ -1,15 +1,26 @@
-FROM debian:stable-slim
+FROM alpine
 
-ENV HUGO_VERSION 0.54.0
-
-COPY download_hugo.sh download_hugo.sh
-
+# Setup tools used during Lepo build process
 RUN set -e && \
-    apt-get update && \
-    apt-get install -y python3-pip git curl libdigest-sha-perl && \
+    apk --update add python3 curl git perl-utils && \
+    python3 -m ensurepip && \
+    pip3 install --upgrade pip setuptools && \
     pip3 install awscli && \
-    ./download_hugo.sh && \
-    mv hugo /usr/local/bin/hugo && \
-    rm -rf /var/lib/apt/lists/* && \
-    rm download_hugo.sh
+    rm -r /root/.cache && \
+    rm -rf /var/cache/apk/*
 
+# Hugo variables
+ENV HUGO_VERSION="0.54.0" ARCH="64bit"
+ENV RELEASE_BASE_URL="https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}" \
+    RELEASE_FILENAME="hugo_${HUGO_VERSION}_Linux-${ARCH}.tar.gz"
+ENV CHECKSUMS_URL="${RELEASE_BASE_URL}/hugo_${HUGO_VERSION}_checksums.txt" \
+    RELEASE_URL="${RELEASE_BASE_URL}/${RELEASE_FILENAME}"
+
+# Download and install Hugo
+RUN set -e && \
+    curl -fL --retry 3 --retry-connrefused --retry-delay 2 -o "${RELEASE_FILENAME}" "${RELEASE_URL}" && \
+    curl -sfSL --retry 3 --retry-connrefused --retry-delay 2 "${CHECKSUMS_URL}" | grep "${RELEASE_FILENAME}" | shasum -c && \
+    tar xvfz "${RELEASE_FILENAME}" hugo && \
+    mv hugo /usr/local/bin/hugo && \
+    hugo version && \
+    rm "${RELEASE_FILENAME}"
