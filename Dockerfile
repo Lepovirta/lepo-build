@@ -24,3 +24,11 @@ RUN set -e && \
     mv hugo /usr/local/bin/hugo && \
     hugo version && \
     rm "${RELEASE_FILENAME}"
+
+# Non-root user
+WORKDIR /project
+RUN set -e && \
+    addgroup -g 10101 -S builder && \
+    adduser -u 10101 -S -G builder builder && \
+    chown -R builder:builder /project
+USER builder:builder
