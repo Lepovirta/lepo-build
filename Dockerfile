@@ -2,7 +2,7 @@ FROM alpine
 
 # Setup tools used during Lepo build process
 RUN set -e && \
-    apk --update add python3 curl git perl-utils && \
+    apk --update add python3 curl git perl-utils bash && \
     python3 -m ensurepip && \
     pip3 install --upgrade pip setuptools && \
     pip3 install awscli && \
