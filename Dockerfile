@@ -26,7 +26,7 @@ RUN set -e && \
     rm "${HUGO_RELEASE_FILENAME}"
 
 # Lukki variables
-ENV LUKKI_VERSION="0.1.1" LUKKI_ARCH="x86_64"
+ENV LUKKI_VERSION="0.1.2" LUKKI_ARCH="x86_64"
 ENV LUKKI_RELEASE_BASE_URL="https://github.com/Lepovirta/lukki/releases/download/v${LUKKI_VERSION}/" \
     LUKKI_RELEASE_FILENAME="lukki_${LUKKI_VERSION}_Linux_${LUKKI_ARCH}.tar.gz"
 ENV LUKKI_CHECKSUMS_URL="${LUKKI_RELEASE_BASE_URL}/checksums.txt" \
