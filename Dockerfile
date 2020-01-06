@@ -7,7 +7,7 @@ RUN set -e && \
     rm -rf /var/cache/apk/*
 
 # Hugo variables
-ENV HUGO_VERSION="0.54.0" HUGO_ARCH="64bit"
+ENV HUGO_VERSION="0.62.2" HUGO_ARCH="64bit"
 ENV HUGO_RELEASE_BASE_URL="https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}" \
     HUGO_RELEASE_FILENAME="hugo_${HUGO_VERSION}_Linux-${HUGO_ARCH}.tar.gz"
 ENV HUGO_CHECKSUMS_URL="${HUGO_RELEASE_BASE_URL}/hugo_${HUGO_VERSION}_checksums.txt" \
