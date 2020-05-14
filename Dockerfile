@@ -2,7 +2,7 @@ FROM alpine
 
 # Setup tools used during Lepo build process
 RUN set -e && \
-    apk --update add npm curl git perl-utils bash && \
+    apk --update add npm curl git perl-utils bash shellcheck && \
     npm install -g netlify-cli && \
     rm -rf /var/cache/apk/*
 
@@ -48,3 +48,4 @@ RUN set -e && \
     adduser -u 10101 -S -G builder builder && \
     chown -R builder:builder /project
 USER builder:builder
+
