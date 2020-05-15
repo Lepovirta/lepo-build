@@ -1,14 +1,25 @@
-FROM golang:1.14-alpine as netlify-installer
+# Use another image to download and build netlify-deployer
+FROM golang:1.14 as netlify-installer
 
 ENV CGO_ENABLED=0
 RUN go get gitlab.com/lepovirta/netlify-deployer
 
-FROM alpine
+FROM debian:10-slim
+
+ENV DEBIAN_FRONTEND=noninteractive
 
 # Setup tools used during Lepo build process
 RUN set -e && \
-    apk --update add curl git perl-utils bash shellcheck && \
-    rm -rf /var/cache/apk/*
+    apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y --no-install-recommends \
+        ca-certificates \
+        curl \
+        git \
+        libdigest-sha-perl \
+        bash \
+        shellcheck && \
+    rm -rf /var/lib/apt/lists/*
 
 # Hugo variables
 ENV HUGO_VERSION="0.70.0" HUGO_ARCH="64bit"
@@ -19,8 +30,10 @@ ENV HUGO_CHECKSUMS_URL="${HUGO_RELEASE_BASE_URL}/hugo_${HUGO_VERSION}_checksums.
 
 # Download and install Hugo
 RUN set -e && \
-    curl -fL --retry 3 --retry-connrefused --retry-delay 2 -o "${HUGO_RELEASE_FILENAME}" "${HUGO_RELEASE_URL}" && \
-    curl -sfSL --retry 3 --retry-connrefused --retry-delay 2 "${HUGO_CHECKSUMS_URL}" | grep "${HUGO_RELEASE_FILENAME}" | shasum -c && \
+    curl -fL --retry 3 --retry-connrefused --retry-delay 2 \
+        -o "${HUGO_RELEASE_FILENAME}" "${HUGO_RELEASE_URL}" && \
+    curl -sfSL --retry 3 --retry-connrefused --retry-delay 2 \
+        "${HUGO_CHECKSUMS_URL}" | grep "${HUGO_RELEASE_FILENAME}" | shasum -c && \
     tar xvfz "${HUGO_RELEASE_FILENAME}" hugo && \
     mv hugo /usr/local/bin/hugo && \
     hugo version && \
@@ -35,21 +48,22 @@ ENV LUKKI_CHECKSUMS_URL="${LUKKI_RELEASE_BASE_URL}/checksums.txt" \
 
 # Download and install lukki
 RUN set -e && \
-    curl -fL --retry 3 --retry-connrefused --retry-delay 2 -o "${LUKKI_RELEASE_FILENAME}" "${LUKKI_RELEASE_URL}" && \
-    curl -sfSL --retry 3 --retry-connrefused --retry-delay 2 "${LUKKI_CHECKSUMS_URL}" | grep "${LUKKI_RELEASE_FILENAME}" | shasum -c && \
+    curl -fL --retry 3 --retry-connrefused --retry-delay 2 \
+        -o "${LUKKI_RELEASE_FILENAME}" "${LUKKI_RELEASE_URL}" && \
+    curl -sfSL --retry 3 --retry-connrefused --retry-delay 2 \
+        "${LUKKI_CHECKSUMS_URL}" | grep "${LUKKI_RELEASE_FILENAME}" | shasum -c && \
     tar xvfz "${LUKKI_RELEASE_FILENAME}" lukki && \
     mv lukki /usr/local/bin/lukki && \
     lukki -version && \
     rm "${LUKKI_RELEASE_FILENAME}"
 
 # Copy netlify-deployer from the installer step
-COPY --from=netlify-installer /go/bin/netlify-deployer /usr/local/bin/ 
+COPY --from=netlify-installer /go/bin/netlify-deployer /usr/local/bin/
 
 # Non-root user
 WORKDIR /project
 RUN set -e && \
-    addgroup -g 10101 -S builder && \
-    adduser -u 10101 -S -G builder builder && \
+    groupadd -g 10101 builder && \
+    useradd -u 10101 -g builder -M -d /project builder && \
     chown -R builder:builder /project
 USER builder:builder
-
