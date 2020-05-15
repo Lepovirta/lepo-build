@@ -38,9 +38,6 @@ RUN set -e && \
     lukki -version && \
     rm "${LUKKI_RELEASE_FILENAME}"
 
-# Install Github commenter
-COPY gh-comment.sh /usr/local/bin/gh-comment
-
 # Non-root user
 WORKDIR /project
 RUN set -e && \
