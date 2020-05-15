@@ -10,8 +10,8 @@ docker-build-master:
     - docker push "$CI_REGISTRY_IMAGE"
     - docker tag "$CI_REGISTRY_IMAGE" "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
     - docker push "$CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG"
-  only:
-    - master
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master"
 
 docker-build:
   image: docker:latest

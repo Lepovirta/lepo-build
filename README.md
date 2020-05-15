@@ -7,7 +7,7 @@ Includes the following:
 * [Git](https://git-scm.com/)
 * [Hugo](https://gohugo.io/)
 
-The image is hosted on [Docker Hub](https://hub.docker.com/r/lepovirta/lepo-build).
+The image is hosted in [Gitlab](https://gitlab.com/lepovirta/lepo-build/container_registry).
 
 ## License
 
