@@ -1,9 +1,13 @@
+FROM golang:1.14-alpine as netlify-installer
+
+ENV CGO_ENABLED=0
+RUN go get gitlab.com/lepovirta/netlify-deployer
+
 FROM alpine
 
 # Setup tools used during Lepo build process
 RUN set -e && \
-    apk --update add npm curl git perl-utils bash shellcheck && \
-    npm install -g netlify-cli && \
+    apk --update add curl git perl-utils bash shellcheck && \
     rm -rf /var/cache/apk/*
 
 # Hugo variables
@@ -37,6 +41,9 @@ RUN set -e && \
     mv lukki /usr/local/bin/lukki && \
     lukki -version && \
     rm "${LUKKI_RELEASE_FILENAME}"
+
+# Copy netlify-deployer from the installer step
+COPY --from=netlify-installer /go/bin/netlify-deployer /usr/local/bin/ 
 
 # Non-root user
 WORKDIR /project
