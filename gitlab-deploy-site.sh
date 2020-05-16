@@ -30,8 +30,12 @@ should_post_comment() {
     [ -n "${GITLAB_ACCESS_TOKEN}" ]
 }
 
+mr_message_template() {
+    echo "[Preview site](${1}) for commit ${GIT_HASH}"
+}
+
 main() {
-    local preview_url mr_message
+    local preview_url
 
     # Deploy
     preview_url=$(netlify-deployer)
@@ -44,8 +48,7 @@ main() {
 
     # Post comment to the merge request, if it's available.
     if should_post_comment; then
-        mr_message="[Preview site](${preview_url})"
-        if ! echo "${mr_message}" | gitlab-comment; then
+        if ! mr_message_template "${preview_url}" | gitlab-comment >/dev/null; then
             echo "Failed to post comment on merge request!" >&2
         fi
     fi
