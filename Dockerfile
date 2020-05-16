@@ -60,6 +60,10 @@ RUN set -e && \
 # Copy netlify-deployer from the installer step
 COPY --from=netlify-installer /go/bin/netlify-deployer /usr/local/bin/
 
+# Copy Gitlab utilities
+COPY gitlab-comment.sh /usr/local/bin/gitlab-comment
+COPY gitlab-deploy-site.sh /usr/local/bin/gitlab-deploy-site
+
 # Non-root user
 WORKDIR /project
 RUN set -e && \
