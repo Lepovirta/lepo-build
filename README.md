@@ -1,11 +1,12 @@
 # lepo-build
 
-A build image containing tools for [lepo](https://github.com/Lepovirta/lepo) static website.
-Includes the following:
+A build image containing tools for building and testing static websites.
+It includes the following tools:
 
-* [Netlify CLI](https://www.netlify.com/docs/cli/)
+* [Netlify deployer](https://gitlab.com/lepovirta/netlify-deployer)
 * [Git](https://git-scm.com/)
 * [Hugo](https://gohugo.io/)
+* Gitlab Merge Request commenter
 
 The image is hosted in [Gitlab](https://gitlab.com/lepovirta/lepo-build/container_registry).
 
