@@ -18,6 +18,7 @@ RUN set -e && \
         git \
         libdigest-sha-perl \
         bash \
+        psmisc \
         shellcheck && \
     rm -rf /var/lib/apt/lists/*
 
