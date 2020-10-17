@@ -19,6 +19,8 @@ RUN set -e && \
         libdigest-sha-perl \
         bash \
         psmisc \
+        parallel \
+        python3 \
         shellcheck && \
     rm -rf /var/lib/apt/lists/*
 
