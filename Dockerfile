@@ -1,28 +1,19 @@
-# Use another image to download and build netlify-deployer
-FROM golang:1.14 as netlify-installer
-
-ENV CGO_ENABLED=0
-RUN go get gitlab.com/lepovirta/netlify-deployer
-
 FROM debian:10-slim
 
 ENV DEBIAN_FRONTEND=noninteractive
 
 # Setup tools used during Lepo build process
-RUN set -e && \
-    apt-get update && \
-    apt-get upgrade -y && \
-    apt-get install -y --no-install-recommends \
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
         ca-certificates \
         curl \
         git \
         libdigest-sha-perl \
-        bash \
         psmisc \
         parallel \
         python3 \
-        shellcheck && \
-    rm -rf /var/lib/apt/lists/*
+        shellcheck \
+    && rm -rf /var/lib/apt/lists/*
 
 # Hugo variables
 ENV HUGO_VERSION="0.70.0" HUGO_ARCH="64bit"
@@ -59,13 +50,6 @@ RUN set -e && \
     mv lukki /usr/local/bin/lukki && \
     lukki -version && \
     rm "${LUKKI_RELEASE_FILENAME}"
-
-# Copy netlify-deployer from the installer step
-COPY --from=netlify-installer /go/bin/netlify-deployer /usr/local/bin/
-
-# Copy Gitlab utilities
-COPY gitlab-comment.sh /usr/local/bin/gitlab-comment
-COPY gitlab-deploy-site.sh /usr/local/bin/gitlab-deploy-site
 
 # Non-root user
 WORKDIR /project
