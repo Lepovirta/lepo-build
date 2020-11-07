@@ -16,7 +16,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 # Hugo variables
-ENV HUGO_VERSION="0.70.0" HUGO_ARCH="64bit"
+ENV HUGO_VERSION="0.78.1" HUGO_ARCH="64bit"
 ENV HUGO_RELEASE_BASE_URL="https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}" \
     HUGO_RELEASE_FILENAME="hugo_${HUGO_VERSION}_Linux-${HUGO_ARCH}.tar.gz"
 ENV HUGO_CHECKSUMS_URL="${HUGO_RELEASE_BASE_URL}/hugo_${HUGO_VERSION}_checksums.txt" \
