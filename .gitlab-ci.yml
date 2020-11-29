@@ -10,6 +10,9 @@ stages:
 - build
 - release
 
+variables:
+  CI_APPLICATION_REPOSITORY: $CI_REGISTRY_IMAGE
+
 workflow:
   rules:
   - if: $CI_MERGE_REQUEST_ID
