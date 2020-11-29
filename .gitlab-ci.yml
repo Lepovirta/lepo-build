@@ -6,8 +6,8 @@ include:
 - template: Container-Scanning.gitlab-ci.yml
 
 stages:
-- test
 - build
+- test
 - release
 
 variables:
